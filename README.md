@@ -1,0 +1,1 @@
+Platform-Stm32_HAL
