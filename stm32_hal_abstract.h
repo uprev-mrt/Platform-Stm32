@@ -13,7 +13,7 @@
 #endif
 
 #include <stdint.h>
-#include "stm32f7xx_hal.h"
+#include "stm32_devices.h"
 
 
 #ifdef __cplusplus
@@ -27,6 +27,7 @@
 
 //Uart Abstraction
 typedef UART_HandleTypeDef* mrt_uart_handle_t;
+typedef HAL_StatusTypeDef mrt_uart_status_t;
 #define MRT_UART_TX(handle, data, len, timeout) HAL_UART_Transmit(handle, data, len, timeout)
 #define MRT_UART_RX(handle, data, len, timeout) HAL_UART_Retrieve(handle, data, len, timeout)
 
@@ -40,6 +41,7 @@ typedef struct{
 
 //I2C Abstraction
 typedef I2C_HandleTypeDef* mrt_i2c_handle_t;
+typedef HAL_StatusTypeDef mrt_i2c_status_t;
 #define MRT_I2C_MASTER_TRANSMIT(handle ,addr,data,len, stop, timeout) HAL_I2C_Master_Transmit(handle , addr, data, len, timeout)
 #define MRT_I2C_MASTER_RECEIVE(handle ,addr, data, len, stop, timeout) HAL_I2C_Master_Receive(handle , addr, data, len, timeout)
 #define MRT_I2C_MEM_WRITE(handle, addr, mem_addr, mem_size, data, len, timeout ) HAL_I2C_Mem_Write(handle ,addr, mem_addr, mem_size, data, len, timeout)
@@ -47,6 +49,7 @@ typedef I2C_HandleTypeDef* mrt_i2c_handle_t;
 
 //SPI Abstraction
 typedef SPI_HandleTypeDef* mrt_spi_handle_t;
+typedef HAL_StatusTypeDef mrt_spi_status_t;
 #define MRT_SPI_TRANSFER(handle ,tx, rx ,len, timeout) HAL_SPI_TransmitReceive(handle, tx, rx, len, timeout)
 
 //printf
