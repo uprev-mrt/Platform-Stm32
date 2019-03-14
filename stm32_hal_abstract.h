@@ -57,6 +57,8 @@ typedef struct{
   typedef SPI_HandleTypeDef* mrt_spi_handle_t;
   typedef HAL_StatusTypeDef mrt_spi_status_t;
   #define MRT_SPI_TRANSFER(handle ,tx, rx ,len, timeout) HAL_SPI_TransmitReceive(handle, tx, rx, len, timeout)
+  #define MRT_SPI_TRANSMIT(handle, tx, len, timeout) HAL_SPI_Transmit(handle, tx, len, timeout)
+  #define MRT_SPI_RECIEVE(handle, tx, len, timeout) HAL_SPI_Transmit(handle, tx, len, timeout)
 #endif
 
 //printf
