@@ -18,7 +18,9 @@ Once the software is installed run STM32CubeMx and follow the steps to configure
 
 Next follow the steps in the MrT/Config Repo to import the Mr T configuration tool as a submodule. This tool will let you manage your Mr T modules. Make sure to import the **Platforms/Common** and **Platforms/STM32 modules**
 
-Once you have imported modules from Mr T, Open your project in SW4STM. Mr T relies on symbols to determine which abstraction platform to include. To use the STM32 platform, go to **Project->Properties->C/C++ General->Settings**. Locate the 'Preproccesor' options and add a symbol named **MRT_PLATFORM_STM32**
+Once you have imported modules from Mr T, Open your project in SW4STM. Mr T relies on symbols to determine which abstraction platform to include. To use the STM32 platform, go to **Project->Properties->C/C++ General->Path and Symbols**:
+>Under the Symbols tab add a symbol named **MRT_PLATFORM_STM32**<br/>
+Under the Source Location tab click add and select the **Modules** directory under Mr T
 
 >To test that it is configured Correctly, build the project and look at the output. There should be a message that says "MrT Platform: STM32"
 
