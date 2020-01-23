@@ -1,10 +1,6 @@
 # Abstraction Later for STM32
 
-To use the stm32 Abstraction layer, create a repo with an STM32 project. The recommended tools are SW4STM32 and STM32CubeMx
-
-* **SW4STM32** is a free IDE for delevoping on the stm32 family of MCU's. It is an Eclipse distribution set up for C/C++ that comes prepackaged with the toolchains and examples for Stm32 processors
-
-* **STM32CubeMx** is a free configuration tool created by St micro. It provides a GUI for configuring peripherals and generating a project. It can directly create a project for SW4STM
+To use the stm32 Abstraction layer, create a repo with an STM32 project. The recommended tool is the STM32CubeIDE
 
 
 >
@@ -21,7 +17,7 @@ Next follow the steps in the MrT/Config Repo to import the Mr T configuration to
 To use the STM32 platform, cofigure the following settings:
 
 **Project->Properties->C/C++ General->Path and Symbols**:
->Under the Symbols tab add a symbol named **MRT_PLATFORM_STM32_HAL**<br/>
+>Under the Symbols tab add a symbol named **MRT_PLATFORM** with the value **MRT_STM32_HAL**<br/>
 Under the Source Location tab click add and select the **Modules** directory under Mr T
 
 **Project->Properties->C/C++ Build->Settings->Includes**:
