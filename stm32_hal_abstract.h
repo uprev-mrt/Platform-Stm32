@@ -16,11 +16,6 @@
 #include "main.h"
 
 
-#ifdef __cplusplus
- }
- namespace Platforms
- {
-#endif
 
 //Delay Abstraction
 #define MRT_DELAY_MS(ms) HAL_Delay(ms)
