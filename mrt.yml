@@ -3,4 +3,3 @@ name: STM32
 description: Abstraction layer for STM32 series MCUs
 category: Platform
 requires: [Platform]
-mfg: STMicroelectronics

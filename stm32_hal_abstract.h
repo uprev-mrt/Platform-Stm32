@@ -24,8 +24,16 @@
 typedef HAL_StatusTypeDef mrt_uart_status_t;
 #ifdef HAL_UART_MODULE_ENABLED
   typedef UART_HandleTypeDef* mrt_uart_handle_t;
+
   #define MRT_UART_TX(handle, data, len, timeout) HAL_UART_Transmit(handle, data, len, timeout)
-  #define MRT_UART_RX(handle, data, len, timeout) HAL_UART_Retrieve(handle, data, len, timeout)
+  #define MRT_UART_RX(handle, data, len, timeout) mrt_stm32_uart_read(handle, data, len, timeout)
+
+  /**
+   *  The STM32 HAL does not provide a non-blocking uart receive
+   *  The normal receive will return if it was successful or failed,
+   *  This will return the number of byte received before the timeout 
+   */
+  int mrt_stm32_uart_read(mrt_uart_handle_t handle, uint8_t* data, int len, int timeout);
 #else
   typedef uint32_t* mrt_uart_handle_t;
 #endif
@@ -61,10 +69,13 @@ typedef HAL_StatusTypeDef mrt_spi_status_t;
   #define MRT_SPI_RECIEVE(handle, tx, len, timeout) HAL_SPI_Transmit(handle, tx, len, timeout)
 #else
   typedef uint32_t* mrt_spi_handle_t;
+  #define MRT_SPI_TRANSFER(handle ,tx, rx ,len, timeout) 0
+  #define MRT_SPI_TRANSMIT(handle, tx, len, timeout) 0
+  #define MRT_SPI_RECIEVE(handle, tx, len, timeout) 0
 #endif
 
 //printf
-#define MRT_PRINTF(f_, ...) printf((f_), __VA_ARGS__)
+#define MRT_PRINTF(f_, ...) printf((f_), ##__VA_ARGS__)
 
 #ifdef __cplusplus
  }
