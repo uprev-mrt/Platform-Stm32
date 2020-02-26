@@ -8,13 +8,28 @@
  #include "stm32_hal_abstract.h"
 
 
- int mrt_stm32_uart_read(mrt_uart_handle_t handle, uint8_t* data, int len, int timeout)
- {
-    /* attempt a uart read*/
-    if(HAL_UART_Receive(handle, data, len, timeout) == HAL_TIMEOUT  )
-    {
-        len -= handle->RxXferCount; /* when the read is started, RxXferCount gets set to len, and decrements for each byte received*/
-    }
+/**
+ * @brief Non-blocking uart receive function for stm32
+ * @param handle handle to uart periph 
+ * @param data ptr to store received bytes
+ * @param len number of bytes ro receive
+ * @param timeout timeout in ms to wait for data
+ * @return number of bytes read. 
+ */
+int mrt_stm32_uart_read(UART_HandleTypeDef* handle, uint8_t* data, int len, int timeout)
+{
+  HAL_StatusTypeDef status;
+  /* attempt a uart read, if read times out, check how many bytes were received */
+  status = HAL_UART_Receive(handle, data, len, timeout);
 
-    return len;
- }
+  if(HAL_UART_Receive(handle, data, len, timeout) == HAL_TIMEOUT  )
+  {
+      len -= handle->RxXferCount; /* when the read is started, RxXferCount gets set to len, and decrements for each byte received*/
+  }
+  else if(status != HAL_OK) /* If response is not TIMEOUT or OK, something went wrong */
+  {
+    len = 0;
+  }
+
+  return len; /* return number of bytes read */
+}
