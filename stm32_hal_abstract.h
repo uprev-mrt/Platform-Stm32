@@ -47,6 +47,9 @@ typedef struct{
 #define MRT_GPIO(pin) (mrt_gpio_t){pin##_GPIO_Port, pin##_Pin }		//used to create a mrt_gpio_t from the stm32_hal symbol for the pin
 #define MRT_GPIO_WRITE( gpio , val ) HAL_GPIO_WritePin(gpio.port, gpio.pin, val)
 #define MRT_GPIO_READ( gpio ) HAL_GPIO_ReadPin(gpio.port, gpio.pin)
+#define MRT_GPIO_PORT_WRITE(port, mask, val) (port->ODR = (port->ODR & ~mask) | (mask & val))   /* unverified */ 
+#define MRT_GPIO_PORT_READ(port) (port->IDR)                                                    /* unverified */ 
+
 
 //I2C Abstraction
 typedef HAL_StatusTypeDef mrt_i2c_status_t;
