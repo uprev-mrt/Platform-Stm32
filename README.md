@@ -3,31 +3,18 @@
 To use the stm32 Abstraction layer, create a repo with an STM32 project. The recommended tool is the STM32CubeIDE
 
 
->
+Use the [mrt-config](https://github.com/uprev-mrt/mrtutils) tool to add in submodules. Make sure to import the **Platforms/Common** and **Platforms/STM32 modules**
 
-
->SW4STM: http://www.openstm32.org/System%2BWorkbench%2Bfor%2BSTM32
-<br/>
->STM32CubeMx: https://www.st.com/en/development-tools/stm32cubemx.html
-
-Once the software is installed run STM32CubeMx and follow the steps to configure the project. When you are ready to create the project go to the **Project Manager** tab to specify where to create the project. Under 'Toolchain/ IDE' select 'SW4STM32', then click 'Generate Code'
-
-Next follow the steps in the MrT/Config Repo to import the Mr T configuration tool as a submodule. This tool will let you manage your Mr T modules. Make sure to import the **Platforms/Common** and **Platforms/STM32 modules**
+> note: after importing modules, right click the project and hit refresh so it sees the new directories
 
 To use the STM32 platform, cofigure the following settings:
 
 **Project->Properties->C/C++ General->Path and Symbols**:
->Under the Symbols tab add a symbol named **MRT_PLATFORM** with the value **MRT_STM32_HAL**<br/>
-Under the Source Location tab click add and select the **Modules** directory under Mr T
-
-**Project->Properties->C/C++ Build->Settings->Includes**:
-
-> Add The modules directory to the include list for GCC (and G++ if used)
-
-**NOTE**: Sometimes reconfiguring the project with STM32CubeMx will overwrite these changes.
-
->To test that it is configured Correctly, build the project and look at the output. There should be a message that says "MrT Platform: STM32"
-
+>* Under the Symbols tab add a symbol named **MRT_PLATFORM** with the value **MRT_STM32_HAL**
+>
+>* Under the Source Location tab click add and select the **Modules** directory under Mr T
+>
+>* Under the Includes tab, click add and add the path to the **Modules** directory under Mr T
 
 
 ---
