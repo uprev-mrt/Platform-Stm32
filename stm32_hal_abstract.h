@@ -77,6 +77,10 @@ typedef HAL_StatusTypeDef mrt_spi_status_t;
   #define MRT_SPI_RECIEVE(handle, tx, len, timeout) 0
 #endif
 
+/* BLE Gatt abstraction */
+#include "stm32_gatt_abstract.h"
+
+
 //printf
 #define MRT_PRINTF(f_, ...) printf((f_), ##__VA_ARGS__)
 

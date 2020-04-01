@@ -19,6 +19,17 @@ To use the STM32 platform, cofigure the following settings:
 
 ---
 
+### USING ACI BLE
+
+To use the STM32 ACI interface for BLE:
+
+**Project->Properties->C/C++ General->Path and Symbols**:
+>* Under the Symbols tab add a symbol named **STM32_GATT_MODULE_ENABLE** 
+
+Generate the services/profile using [mrt-ble](https://github.com/uprev-mrt/mrtutils)
+
+
+
 ### Enabling printf
 
 The Stm32 programmers use the SWO pin to print messages back to the host. This can be useful to log out messages to the console for debug. To enable printf to work through the SWO pin follow these steps:
