@@ -19,7 +19,7 @@ To use the STM32 platform, cofigure the following settings:
 
 ---
 
-### USING ACI BLE
+## USING ACI_BLE
 
 To use the STM32 ACI interface for BLE:
 
@@ -28,7 +28,17 @@ To use the STM32 ACI interface for BLE:
 
 Generate the services/profile using [mrt-ble](https://github.com/uprev-mrt/mrtutils)
 
+The output will be a header/source for each service, and a header/source for the profile. 
+In main.c, before 'APPE_Init();' register the profile init function:
 
+```c
+MRT_GATT_REGISTER_PROFILE_INIT(example_profile_init);
+```
+When the server is initialized by the system it will create and register all services and characteristics. To update a value use:
+
+```c
+MRT_GATT_UPDATE_CHAR(&env_svc.mTemp, (uint8_t*)&temp, sizeof(temp)); /* replace env_svc.mTemp with a char in one of your services*/
+```
 
 ### Enabling printf
 

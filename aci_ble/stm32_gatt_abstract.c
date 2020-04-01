@@ -19,6 +19,10 @@ static bool ServerInitialized = false;
 
 mrt_profile_init f_profileInit;
 
+/**
+ * @brief Initializes the services. This is declared weakly in ST's framework, so we re-implement to inject out initializer
+ * 
+ */
 SVCCTL_SvcInit(void)
 {
 	  BLS_Init();
@@ -37,8 +41,8 @@ SVCCTL_SvcInit(void)
 	  MESH_Init();
 
 
-	  f_profileInit();
-	  ServerInitialized = true;
+	  f_profileInit();              /* This is where we set our profile init function*/
+	  ServerInitialized = true;     /* Mark server as intialized */
 
 
 	  return;
@@ -72,6 +76,7 @@ mrt_status_t MRT_GATT_REGISTER_PROFILE_INIT(mrt_profile_init cbInit)
 {
 	f_profileInit = cbInit;
 }
+
 
 uint32_t MRT_GATT_REGISTER_SERVICE(mrt_gatt_svc_t* svc)
 {
