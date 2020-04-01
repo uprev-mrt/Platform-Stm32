@@ -7,7 +7,7 @@
 
  #include "stm32_hal_abstract.h"
 
-
+#ifdef HAL_UART_MODULE_ENABLED
 /**
  * @brief Non-blocking uart receive function for stm32
  * @param handle handle to uart periph 
@@ -33,3 +33,5 @@ int mrt_stm32_uart_read(UART_HandleTypeDef* handle, uint8_t* data, int len, int 
 
   return len; /* return number of bytes read */
 }
+
+#endif
