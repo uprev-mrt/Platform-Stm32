@@ -11,9 +11,11 @@
 
 
 /* Includes ------------------------------------------------------------------*/
-#include "Platforms/STM32/stm32_gatt_abstract.h"
+#include "Platforms/STM32/aci_ble/stm32_gatt_abstract.h"
 #include "common_blesvc.h"
 #include "Devices/RF/BLE/GattServer/gatt_server.h"
+
+static bool ServerInitialized = false;
 
 mrt_profile_init f_profileInit;
 
@@ -36,6 +38,7 @@ SVCCTL_SvcInit(void)
 
 
 	  f_profileInit();
+	  ServerInitialized = true;
 
 
 	  return;
@@ -81,7 +84,7 @@ uint32_t MRT_GATT_REGISTER_SERVICE(mrt_gatt_svc_t* svc)
     for(int i = 0; i < svc->mCharCount; i++)
     {
         attrib_count+= 2;                       /* 2 attributes for each characteristic */
-        if(svc->mChars[i].mProps & MRT_GATT_PROP_NOTIFY)
+        if(svc->mChars[i]->mProps & MRT_GATT_PROP_NOTIFY)
         	attrib_count++;						/* 1 extra attribute if char has notifications */
     }
 
@@ -101,7 +104,7 @@ uint32_t MRT_GATT_REGISTER_SERVICE(mrt_gatt_svc_t* svc)
     /* Add each Characteristic in the service*/
     for(int i = 0; i < svc->mCharCount; i++)
     {
-        mrt_gatt_char_t* chr = &svc->mChars[i];
+        mrt_gatt_char_t* chr = svc->mChars[i];
 
         convert_uuid(&chr->mUuid, &st_uuid16,  &st_uuid_type);      /*convert uuid*/
         aci_gatt_add_char(svc->mHandle,
@@ -115,6 +118,25 @@ uint32_t MRT_GATT_REGISTER_SERVICE(mrt_gatt_svc_t* svc)
                       &chr->mHandle);
 
     }
+}
+
+mrt_status_t MRT_GATT_UPDATE_CHAR(mrt_gatt_char_t* chr, uint8_t* data, int len)
+{
+    mrt_status_t status = MRT_STATUS_ERROR;
+
+    if(!ServerInitialized) /* If server is not initialized, return error*/
+    {
+        return status;
+    }
+        
+
+    status = aci_gatt_update_char_value(chr->mSvc->mHandle ,
+                             chr->mHandle,
+                              0, /* charValOffset */
+                             len, /* charValueLen */
+                             data);
+    
+    return status;
 }
 
 

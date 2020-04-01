@@ -15,6 +15,10 @@
 #include <stdint.h>
 #include "main.h"
 
+/* BLE Gatt abstraction */
+#ifdef STM32_GATT_MODULE_ENABLED
+  #include "Platforms/STM32/aci_ble/stm32_gatt_abstract.h"
+#endif
 
 
 //Delay Abstraction
@@ -77,8 +81,6 @@ typedef HAL_StatusTypeDef mrt_spi_status_t;
   #define MRT_SPI_RECIEVE(handle, tx, len, timeout) 0
 #endif
 
-/* BLE Gatt abstraction */
-#include "stm32_gatt_abstract.h"
 
 
 //printf

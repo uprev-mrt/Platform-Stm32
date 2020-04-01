@@ -39,6 +39,7 @@ typedef mrt_status_t (*mrt_profile_init)(void);
 mrt_status_t MRT_GATT_REGISTER_PROFILE_INIT(mrt_profile_init cbInit);
 mrt_status_t MRT_GATT_REGISTER_SERVICE(mrt_gatt_svc_t* svc);
 mrt_status_t MRT_GATT_REGISTER_CHAR(mrt_gatt_svc_t* svc, mrt_gatt_char_t* chr);
+mrt_status_t MRT_GATT_UPDATE_CHAR(mrt_gatt_char_t* chr, uint8_t* dat, int len);
 
 
 #ifdef __cplusplus
