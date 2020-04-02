@@ -21,18 +21,34 @@ extern "C"
 
 
 /* Exported types ------------------------------------------------------------*/
+
+typedef enum{
+    ATTR_NONE,
+	ATTR_CHR,
+    ATTR_CHR_VALUE,
+    ATTR_CHR_DESCRIPTOR,
+    ATTR_SERVICE
+}attrib_type_e;
+
 typedef uint32_t mrt_gatt_evt_status_t;
-typedef uint16_t mrt_gatt_chr_handle_t;
-typedef uint16_t mrt_gatt_svc_handle_t;
 typedef uint32_t mrt_status_t;
 
 typedef struct mrt_gatt_svc_t mrt_gatt_svc_t;                             //forward declare for self referencing callback
 typedef struct mrt_gatt_char_t mrt_gatt_char_t;                             //forward declare for self referencing callback
 typedef mrt_status_t (*mrt_profile_init)(void);
 
+typedef struct{
+    attrib_type_e mType;
+    void* mPtr;
+} attrib_table_entry_t;
+
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
-#define MRT_GATT_SVC_ATTR __attribute__((section ("BLE_DRIVER_CONTEXT")))
+#define MRT_GATT_DATA_ATTR __attribute__((section ("BLE_DRIVER_CONTEXT")))
+
+#ifndef MRT_GATT_MAX_ATTRIBUTE_COUNT
+#define MRT_GATT_MAX_ATTRIBUTE_COUNT 100
+#endif
 
 
 /* Exported functions ------------------------------------------------------- */
