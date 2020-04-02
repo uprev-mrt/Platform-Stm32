@@ -24,7 +24,7 @@ To use the STM32 platform, cofigure the following settings:
 To use the STM32 ACI interface for BLE:
 
 **Project->Properties->C/C++ General->Path and Symbols**:
->* Under the Symbols tab add a symbol named **STM32_GATT_MODULE_ENABLE** 
+>* Under the Symbols tab add a symbol named **STM32_GATT_MODULE_ENABLED** 
 
 Generate the services/profile using [mrt-ble](https://github.com/uprev-mrt/mrtutils)
 

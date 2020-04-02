@@ -13,7 +13,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "Platforms/STM32/aci_ble/stm32_gatt_abstract.h"
 #include "common_blesvc.h"
-#include "Devices/RF/BLE/GattServer/gatt_server.h"
+#include "Utilities/Interfaces/GattServer/gatt_server.h"
 
 static bool ServerInitialized = false;
 
@@ -41,8 +41,8 @@ SVCCTL_SvcInit(void)
 	  MESH_Init();
 
 
-	  f_profileInit();              /* This is where we set our profile init function*/
 	  ServerInitialized = true;     /* Mark server as intialized */
+	  f_profileInit();              /* This is where we set our profile init function*/
 
 
 	  return;
