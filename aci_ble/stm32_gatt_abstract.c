@@ -75,6 +75,8 @@ static SVCCTL_EvtAckStatus_t gatt_event_handler(void *Event)
                                 mrt_evt.mType = GATT_EVT_DESCR_WRITE; 
                                 mrt_evt.mChar = (mrt_gatt_char_t*) attr_entry.mPtr;
                                 break;
+                            default:
+                            	break;
                         }
                     
                     }
@@ -95,7 +97,7 @@ static SVCCTL_EvtAckStatus_t gatt_event_handler(void *Event)
  * @brief Initializes the services. This is declared weakly in ST's framework, so we re-implement to inject out initializer
  * 
  */
-SVCCTL_SvcInit(void)
+void SVCCTL_SvcInit(void)
 {
     BLS_Init();
     CRS_STM_Init();
@@ -147,6 +149,7 @@ void convert_uuid(mrt_gatt_uuid_t* src, Char_UUID_t* dst, uint8_t* st_type)
 mrt_status_t MRT_GATT_REGISTER_PROFILE_INIT(mrt_profile_init cbInit)
 {
 	f_profileInit = cbInit;
+	return MRT_STATUS_OK;
 }
 
 
@@ -154,7 +157,6 @@ uint32_t MRT_GATT_REGISTER_SERVICE(mrt_gatt_svc_t* svc)
 {
     Char_UUID_t  st_uuid16; /*uses ST uuid struct*/
     uint8_t st_uuid_type;
-    uint8_t st_props;
 
     /* before registering the first service, clear the table*/
     MRT_ON_FIRST
@@ -213,6 +215,7 @@ uint32_t MRT_GATT_REGISTER_SERVICE(mrt_gatt_svc_t* svc)
             attribute_table[chr->mHandle+2].mPtr = (void*) chr;
 
     }
+   return MRT_STATUS_OK;
 }
 
 mrt_status_t MRT_GATT_UPDATE_CHAR(mrt_gatt_char_t* chr, uint8_t* data, int len)
