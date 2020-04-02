@@ -32,6 +32,8 @@ typedef mrt_status_t (*mrt_profile_init)(void);
 
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
+#define MRT_GATT_SVC_ATTR __attribute__((section ("BLE_DRIVER_CONTEXT")))
+
 
 /* Exported functions ------------------------------------------------------- */
 
