@@ -16,9 +16,9 @@
 #include "Utilities/Interfaces/GattServer/gatt_server.h"
 
 /* Private Variables ---------------------------------------------------------*/
-static bool ServerInitialized = false;  /* flag to make sure server is initialized before updating chars*/
-mrt_profile_init f_profileInit;         /* function pointer to inject profile init function into framework*/
-static attrib_table_entry_t attribute_table[MRT_GATT_MAX_ATTRIBUTE_COUNT];
+static bool ServerInitialized = false;                                      /* flag to make sure server is initialized before updating chars*/
+mrt_profile_init f_profileInit;                                             /* function pointer to inject profile init function into framework*/
+static attrib_table_entry_t attribute_table[MRT_GATT_MAX_ATTRIBUTE_COUNT];  /* Attibute entry table*/
 
 /* Functions -----------------------------------------------------------------*/
 
@@ -33,6 +33,7 @@ static void clear_attribute_table()
 
 static SVCCTL_EvtAckStatus_t gatt_event_handler(void *Event)
 {
+    /* From ST example*/
 	SVCCTL_EvtAckStatus_t return_value;
     hci_event_pckt *event_pckt;
     evt_blue_aci *blue_evt;
@@ -41,39 +42,47 @@ static SVCCTL_EvtAckStatus_t gatt_event_handler(void *Event)
     return_value = SVCCTL_EvtNotAck;
     event_pckt = (hci_event_pckt *)(((hci_uart_pckt*)Event)->data);
     
+    /* Variables for converting ST event structure to MRT*/
     attrib_table_entry_t attr_entry;
-
     mrt_gatt_evt_t mrt_evt;
     mrt_evt.mType =GATT_EVT_NONE;
     mrt_evt.mChar = NULL;
 
     switch(event_pckt->evt)
     {
-        case EVT_VENDOR:
+        case EVT_VENDOR: /* Handle vendor/profile specific events, i.e. ignore low level events*/
         {
         	blue_evt = (evt_blue_aci*)event_pckt->data;
-        	case EVT_BLUE_GATT_ATTRIBUTE_MODIFIED:
-            {
-                attribute_modified = (aci_gatt_attribute_modified_event_rp0*)blue_evt->data;
-                /* look up handle*/
-                attr_entry = attribute_table[attribute_modified->Attr_Handle];
-                
-                mrt_evt.mData.data = attribute_modified->Attr_Data;
-                mrt_evt.mData.len = attribute_modified->Attr_Data_Length;
-                switch(attr_entry.mType)
-                {
-                    case ATTR_CHR_VALUE:
-                        mrt_evt.mType = GATT_EVT_CHAR_WRITE; 
-                        mrt_evt.mChar = (mrt_gatt_char_t*) attr_entry.mPtr;
-                        break;
-                    case ATTR_SERVICE:
-                        break;
-                }
-            
+            switch(blue_evt->ecode)
+            {       
+                    case EVT_BLUE_GATT_ATTRIBUTE_MODIFIED:
+                    {
+                        attribute_modified = (aci_gatt_attribute_modified_event_rp0*)blue_evt->data;
+                        
+                        /* look up handle*/
+                        attr_entry = attribute_table[attribute_modified->Attr_Handle];
+                        
+                        /* build mrt_gatt_evt_t from st event struct*/
+                        mrt_evt.mData.data = attribute_modified->Attr_Data;
+                        mrt_evt.mData.len = attribute_modified->Attr_Data_Length;
+                        switch(attr_entry.mType)
+                        {
+                            case ATTR_CHR_VALUE:
+                                mrt_evt.mType = GATT_EVT_VALUE_WRITE; 
+                                mrt_evt.mChar = (mrt_gatt_char_t*) attr_entry.mPtr;
+                                break;
+                            case ATTR_CHR_DESCRIPTOR:
+                                mrt_evt.mType = GATT_EVT_DESCR_WRITE; 
+                                mrt_evt.mChar = (mrt_gatt_char_t*) attr_entry.mPtr;
+                                break;
+                        }
+                    
+                    }
             }
         }
     }
 
+    /* If an event was built, send it the handler for the appropriate characteristic*/
     if(mrt_evt.mChar != NULL)
     {
         mrt_evt.mChar->cbEvent(&mrt_evt);
@@ -191,15 +200,15 @@ uint32_t MRT_GATT_REGISTER_SERVICE(mrt_gatt_svc_t* svc)
                       10, /* encryKeySize */
                       1, /* isVariable */
                       &chr->mHandle);
-            /* add attrib handle to table*/
+            /* add char attrib handle to table*/
             attribute_table[chr->mHandle].mType = ATTR_CHR;
             attribute_table[chr->mHandle].mPtr = (void*) chr;
 
-            /* add attrib value handle to table*/
+            /* add value attrib handle to table*/
             attribute_table[chr->mHandle+1].mType = ATTR_CHR_VALUE;
             attribute_table[chr->mHandle+1].mPtr = (void*) chr;
 
-             /* add attrib value handle to table*/
+             /* add Descriptor attrib handle to table*/
             attribute_table[chr->mHandle+2].mType = ATTR_CHR_DESCRIPTOR;
             attribute_table[chr->mHandle+2].mPtr = (void*) chr;
 
