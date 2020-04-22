@@ -48,6 +48,8 @@ typedef struct{
   GPIO_TypeDef* port;
   uint16_t pin;
 } mrt_gpio_t;
+#define NULL_GPIO_Port NULL
+#define NULL_Pin 0
 #define MRT_GPIO(pin) (mrt_gpio_t){pin##_GPIO_Port, pin##_Pin }		//used to create a mrt_gpio_t from the stm32_hal symbol for the pin
 #define MRT_GPIO_WRITE( gpio , val ) HAL_GPIO_WritePin(gpio.port, gpio.pin, val)
 #define MRT_GPIO_READ( gpio ) HAL_GPIO_ReadPin(gpio.port, gpio.pin)
