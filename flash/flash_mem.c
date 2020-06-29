@@ -28,12 +28,19 @@ mrt_status_t flash_init(flash_chunk_t* fc, uint32_t baseAddr, uint32_t chunkSize
 mrt_status_t flash_write(flash_chunk_t* fc, uint32_t addr, const uint8_t* data, uint32_t len)
 {
     uint32_t* cast = (uint16_t*)data;
+    uint32_t comp;
 
     HAL_FLASH_Unlock();
 
     for(int i=0; i < len; i+=4)
     {
-        HAL_FLASH_Program(FLASH_PROC_PROGRAMWORD, fc->mBaseAddr + addr + i, cast[i]);
+        flash_read(fc, fc->mBaseAddr + addr + i, &comp, 4);
+
+        //Only write if it is different to save write cycles
+        if(comp != cast[i])
+        {
+            HAL_FLASH_Program(FLASH_PROC_PROGRAMWORD, fc->mBaseAddr + addr + i, cast[i]);
+        }
         fc->mCursor = fc->mBaseAddr + addr + i +1;
     }
 
