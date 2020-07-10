@@ -34,4 +34,16 @@ int mrt_stm32_uart_read(UART_HandleTypeDef* handle, uint8_t* data, int len, int 
   return len; /* return number of bytes read */
 }
 
+
 #endif
+
+uint32_t mrt_stm32_gpio_port_set_dir(GPIO_TypeDef* port, uint32_t mask, uint32_t mode)
+{
+  GPIO_InitTypeDef GPIO_InitStruct = {0};
+
+  GPIO_InitStruct.Pin = mask;
+  GPIO_InitStruct.Mode = mode;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(port, &GPIO_InitStruct);
+}

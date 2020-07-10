@@ -52,12 +52,16 @@ typedef struct{
 typedef GPIO_TypeDef* mrt_gpio_port_t;
 #define NULL_GPIO_Port NULL
 #define NULL_Pin 0
+#define MRT_GPIO_MODE_INPUT GPIO_MODE_INPUT
+#define MRT_GPIO_MODE_OUTPUT GPIO_MODE_OUTPUT_PP
+
 #define MRT_GPIO(pin) (mrt_gpio_t){pin##_GPIO_Port, pin##_Pin }		//used to create a mrt_gpio_t from the stm32_hal symbol for the pin
 #define MRT_GPIO_WRITE( gpio , val ) HAL_GPIO_WritePin(gpio.port, gpio.pin, val)
 #define MRT_GPIO_READ( gpio ) HAL_GPIO_ReadPin(gpio.port, gpio.pin)
 #define MRT_GPIO_PORT_WRITE(port, mask, val) (port->ODR = (port->ODR & ~mask) | (mask & val))   /* unverified */ 
 #define MRT_GPIO_PORT_READ(port) (port->IDR)                                                    /* unverified */ 
-
+#define MRT_GPIO_PORT_SET_DIR(port,mask, mode) mrt_stm32_gpio_port_set_dir(port,mask,mode);
+uint32_t mrt_stm32_gpio_port_set_dir(GPIO_TypeDef* port, uint32_t mask, uint32_t mode);
 
 //I2C Abstraction
 typedef HAL_StatusTypeDef mrt_i2c_status_t;
