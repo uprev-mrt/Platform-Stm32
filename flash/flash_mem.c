@@ -8,10 +8,13 @@
  * 
  */
 
+
 #pragma once 
 
 /* Includes ------------------------------------------------------------------*/
 #include "flash_mem.h"
+
+#ifdef __STM32F0xx_HAL_FLASH_H
 
 /* Private Variables ---------------------------------------------------------*/
 /* Functions -----------------------------------------------------------------*/
@@ -56,3 +59,5 @@ mrt_status_t flash_read(flash_chunk_t* fc, uint32_t addr, uint8_t* data, uint32_
     
     return MRT_STATUS_OK;
 }
+
+#endif // __STM32F0xx_HAL_FLASH_H
