@@ -192,12 +192,17 @@ uint32_t MRT_GATT_REGISTER_SERVICE(mrt_gatt_svc_t* svc)
     {
         mrt_gatt_char_t* chr = svc->mChars[i];
 
+        if(svc->mSecurity)
+        {
+            chr->mSecurity = svc->mSecurity;
+        }
+
         convert_uuid(&chr->mUuid, &st_uuid16,  &st_uuid_type);      /*convert uuid*/
         aci_gatt_add_char(svc->mHandle,
                       st_uuid_type, &st_uuid16,
                       chr->mSize,
-                      chr->mProps | CHAR_PROP_WRITE ,                                 /* Gatt server uses the same prop flags, no need to convert for STM32*/
-                      ATTR_PERMISSION_NONE,
+                      chr->mProps | CHAR_PROP_WRITE ,                  /* Gatt server uses the same prop flags, no need to convert for STM32 */
+                      chr->mSecurity ,                                 /* Gatt server uses the same same security flags, no need to convert for STM32 */
 					  GATT_NOTIFY_ATTRIBUTE_WRITE, /* gattEvtMask */
                       10, /* encryKeySize */
                       1, /* isVariable */
