@@ -37,6 +37,58 @@ int mrt_stm32_uart_read(UART_HandleTypeDef* handle, uint8_t* data, int len, int 
 
 #endif
 
+#ifdef HAL_TIM_MODULE_ENABLED
+
+/**
+ * @brief initializes mrt struct for PWM
+ * @param pwm - ptr to mrt_pwm_t
+ * @param tim - ptr to STM32 Timer 
+ * @param channel - ptr to OC channel config
+ * @param config - ptr to OC channel config
+ * @return uin32_t 
+ */
+uint32_t mrt_stm32_pwm_init(mrt_pwm_t* pwm, TIM_HandleTypeDef* tim, uint32_t channel,  TIM_OC_InitTypeDef* config)
+{
+  pwm->mTimer = tim;
+  pwm->mChannel = channel;
+  memcpy( (void*) &pwm->mConfig, (void*) config, sizeof(TIM_OC_InitTypeDef));
+  pwm->mFlags = PWM_FLAG_NONE;
+
+  return 0;
+}
+
+uint32_t mrt_stm32_pwm_set_duty(mrt_pwm_t* pwm, float val)
+{
+  uint32_t pulse = (val * pwm->mTimer->Init.Period) / 100; //convert percentage to pulse
+
+  return mrt_stm32_pwm_set_pulse(pwm, pulse);
+}
+
+uint32_t mrt_stm32_pwm_set_pulse(mrt_pwm_t* pwm, uint32_t val)
+{
+  HAL_StatusTypeDef status;
+
+  pwm->mConfig.Pulse = val;
+
+  if (HAL_TIM_PWM_ConfigChannel(pwm->mTimer, &pwm->mConfig, pwm->mChannel) != HAL_OK) 
+  { 
+      Error_Handler(); 
+  } 
+
+  if(pwm->mFlags & PWM_FLAG_COMP)
+  {
+   status = HAL_TIMEx_PWMN_Start(pwm->mTimer, pwm->mChannel);
+  }
+  else
+  {
+    status = HAL_TIM_PWM_Start(pwm->mTimer, pwm->mChannel);
+  }
+
+  return status;
+}
+
+#endif
+
 uint32_t mrt_stm32_gpio_port_set_dir(GPIO_TypeDef* port, uint32_t mask, uint32_t mode)
 {
   GPIO_InitTypeDef GPIO_InitStruct = {0};

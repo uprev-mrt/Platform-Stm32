@@ -63,6 +63,30 @@ typedef GPIO_TypeDef* mrt_gpio_port_t;
 #define MRT_GPIO_PORT_SET_DIR(port,mask, mode) mrt_stm32_gpio_port_set_dir(port,mask,mode);
 uint32_t mrt_stm32_gpio_port_set_dir(GPIO_TypeDef* port, uint32_t mask, uint32_t mode);
 
+//PWM Abstraction
+
+#ifdef HAL_TIM_MODULE_ENABLED
+
+#define PWM_FLAG_NONE 0x00 //no flags
+#define PWM_FLAG_COMP 0x01 //flag to use complementary channel (PWMN)
+
+typedef struct{
+  TIM_HandleTypeDef* mTimer;
+  TIM_OC_InitTypeDef mConfig; 
+  uint32_t mChannel;
+  uint8_t mFlags;
+} mrt_pwm_t;
+#define MRT_PWM_INIT(pwm, tim, channel, config ) mrt_stm32_pwm_init( pwm, tim, channel, config)
+#define MRT_PWM_SET_DUTY( pwm, val) mrt_stm32_pwm_set_duty(pwm, val)
+#define MRT_PWM_SET_PULSE( pwm, val) mrt_stm32_pwm_set_pulse(pwm, val)
+
+uint32_t mrt_stm32_pwm_init(mrt_pwm_t* pwm, TIM_HandleTypeDef* tim, uint32_t channel, TIM_OC_InitTypeDef* config);
+uint32_t mrt_stm32_pwm_set_duty(mrt_pwm_t* pwm, float val);
+uint32_t mrt_stm32_pwm_set_pulse(mrt_pwm_t* pwm, uint32_t val);
+#else
+  typedef uint32_t* mrt_pwm_t;
+#endif
+
 //I2C Abstraction
 typedef HAL_StatusTypeDef mrt_i2c_status_t;
 #ifdef HAL_I2C_MODULE_ENABLED
