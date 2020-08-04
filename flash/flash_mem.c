@@ -14,13 +14,12 @@
 /* Includes ------------------------------------------------------------------*/
 #include "flash_mem.h"
 
-#ifdef __STM32F0xx_HAL_FLASH_H
-
 /* Private Variables ---------------------------------------------------------*/
 /* Functions -----------------------------------------------------------------*/
 
 mrt_status_t flash_init(flash_chunk_t* fc, uint32_t baseAddr, uint32_t chunkSize, uint32_t pageSize )
 {
+    
     fc->mBaseAddr = baseAddr;
     fc->mChunkSize = chunkSize;
     fc->mPageSize = pageSize;
@@ -28,21 +27,42 @@ mrt_status_t flash_init(flash_chunk_t* fc, uint32_t baseAddr, uint32_t chunkSize
     return MRT_STATUS_OK;
 }
 
+mrt_status_t flash_read(flash_chunk_t* fc, uint32_t addr, uint8_t* data, uint32_t len)
+{
+    uint32_t* data32 = (uint32_t*) data;
+    uint8_t* flashData = (__IO uint8_t*)(fc->mBaseAddr );
+    // for(int i=0; i < len/4; i++ )
+    // {
+    //     data32[i] = *(__IO uint32_t*)(fc->mBaseAddr + addr);
+    // }
+    memcpy(data, flashData, len);
+    
+    return MRT_STATUS_OK;
+}
+
+/******************************************
+ *             STM32F0xx
+ * ***************************************/
+#ifdef __STM32F0xx_HAL_FLASH_H
 mrt_status_t flash_write(flash_chunk_t* fc, uint32_t addr, const uint8_t* data, uint32_t len)
 {
-    uint32_t* cast = (uint16_t*)data;
+     __HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_EOP | FLASH_FLAG_OPERR | FLASH_FLAG_WRPERR | FLASH_FLAG_PGAERR | FLASH_FLAG_PGSERR );
+
+    uint32_t* cast = (uint32_t*)data;
     uint32_t comp;
+    int cursor = 0;
 
     HAL_FLASH_Unlock();
 
-    for(int i=0; i < len; i+=4)
+    for(int i=0; i < len; i+=)
     {
-        flash_read(fc, fc->mBaseAddr + addr + i, &comp, 4);
+    	cursor = i/4;
+        flash_read(fc, addr + i, &comp, sizeof(uint464_t));
 
         //Only write if it is different to save write cycles
-        if(comp != cast[i])
+        if(comp != cast[cursor])
         {
-            HAL_FLASH_Program(FLASH_PROC_PROGRAMWORD, fc->mBaseAddr + addr + i, cast[i]);
+        	HAL_FLASH_Program(FLASH_PROC_PROGRAMWORD, fc->mBaseAddr + addr + i, cast[cursor]);
         }
         fc->mCursor = fc->mBaseAddr + addr + i +1;
     }
@@ -51,13 +71,38 @@ mrt_status_t flash_write(flash_chunk_t* fc, uint32_t addr, const uint8_t* data, 
 
     return MRT_STATUS_OK;
 }
+#endif // __STM32F0xx_HAL_FLASH_H
 
-mrt_status_t flash_read(flash_chunk_t* fc, uint32_t addr, uint8_t* data, uint32_t len)
+
+/******************************************
+ *             STM32WBxx
+ * ***************************************/
+#ifdef STM32WBxx_HAL_FLASH_H
+mrt_status_t flash_write(flash_chunk_t* fc, uint32_t addr, const uint8_t* data, uint32_t len)
 {
-    uint8_t* flashData = (*(__IO uint8_t*)(fc->mBaseAddr + addr));
-    memcpy(data, flashData, len);
-    
+     __HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_EOP | FLASH_FLAG_OPERR | FLASH_FLAG_WRPERR | FLASH_FLAG_PGAERR | FLASH_FLAG_PGSERR );
+
+    uint64_t* cast = (uint64_t*)data;
+    uint64_t comp;
+    int cursor = 0;
+
+    HAL_FLASH_Unlock();
+
+    for(int i=0; i < len; i+=8)
+    {
+    	cursor = i/8;
+        flash_read(fc, addr + i, &comp, sizeof(uint64_t));
+
+        //Only write if it is different to save write cycles
+        if(comp != cast[cursor])
+        {
+        	HAL_FLASH_Program(FLASH_TYPEPROGRAM_DOUBLEWORD, fc->mBaseAddr + addr + i, cast[cursor]);
+        }
+        fc->mCursor = fc->mBaseAddr + addr + i +1;
+    }
+
+    HAL_FLASH_Lock();
+
     return MRT_STATUS_OK;
 }
-
-#endif // __STM32F0xx_HAL_FLASH_H
+#endif // STM32WBxx_HAL_FLASH_H

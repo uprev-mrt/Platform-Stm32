@@ -14,7 +14,6 @@
 #include "main.h"
 #include "Platforms/Common/mrt_platform.h"
 
-#ifdef __STM32F0xx_HAL_FLASH_H
 
 /* Exported constants --------------------------------------------------------*/
 /* Exported types ------------------------------------------------------------*/
@@ -57,4 +56,3 @@ mrt_status_t flash_write(flash_chunk_t* fc, uint32_t addr, const uint8_t* data, 
  */
 mrt_status_t flash_read(flash_chunk_t* fc, uint32_t addr, uint8_t* data, uint32_t len);
 
-#endif // __STM32F0xx_HAL_FLASH_H
