@@ -84,8 +84,8 @@ static SVCCTL_EvtAckStatus_t gatt_event_handler(void *Event)
         }
     }
 
-    /* If an event was built, send it the handler for the appropriate characteristic*/
-    if(mrt_evt.mChar != NULL)
+    /* If VALUE_WRITE event was created for a valid characteristic, call its handler*/
+    if((mrt_evt.mChar != NULL) && (mrt_evt.mType == GATT_EVT_VALUE_WRITE ))
     {
         memcpy((void*)mrt_evt.mChar->mCache.mData, (void*)mrt_evt.mData.data, mrt_evt.mChar->mSize ); //Update Cache
         mrt_evt.mChar->mCache.mLen =  mrt_evt.mChar->mSize ;
