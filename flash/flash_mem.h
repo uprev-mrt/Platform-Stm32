@@ -43,6 +43,7 @@ mrt_status_t flash_init(flash_chunk_t* fc, uint32_t baseAddr, uint32_t chunkSize
  * @param len number of bytes to write
  * @param data ptr to data to write
  * @return mrt_status_t 
+ * 
  */
 mrt_status_t flash_write(flash_chunk_t* fc, uint32_t addr, const uint8_t* data, uint32_t len);
 

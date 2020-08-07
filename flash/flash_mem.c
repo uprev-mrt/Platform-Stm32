@@ -20,6 +20,8 @@
 mrt_status_t flash_init(flash_chunk_t* fc, uint32_t baseAddr, uint32_t chunkSize, uint32_t pageSize )
 {
     
+    __HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_ALL_ERRORS); //If this causes compilation errors in other projects, the symbol might be specific to WB55
+    
     fc->mBaseAddr = baseAddr;
     fc->mChunkSize = chunkSize;
     fc->mPageSize = pageSize;
@@ -80,7 +82,9 @@ mrt_status_t flash_write(flash_chunk_t* fc, uint32_t addr, const uint8_t* data, 
 #ifdef STM32WBxx_HAL_FLASH_H
 mrt_status_t flash_write(flash_chunk_t* fc, uint32_t addr, const uint8_t* data, uint32_t len)
 {
-     __HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_EOP | FLASH_FLAG_OPERR | FLASH_FLAG_WRPERR | FLASH_FLAG_PGAERR | FLASH_FLAG_PGSERR );
+    /* NOTE! writes data must be a multiple of 2 words (8 bytes) */
+
+     __HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_ALL_ERRORS );
 
     uint64_t* cast = (uint64_t*)data;
     uint64_t comp;
