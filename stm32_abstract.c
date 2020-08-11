@@ -70,17 +70,28 @@ uint32_t mrt_stm32_pwm_set_pulse(mrt_pwm_t* pwm, uint32_t val)
 
   pwm->mConfig.Pulse = val;
 
-  if (HAL_TIM_PWM_ConfigChannel(pwm->mTimer, &pwm->mConfig, pwm->mChannel) != HAL_OK) 
-  { 
-      Error_Handler(); 
-  } 
 
-  if(pwm->mFlags & PWM_FLAG_COMP)
+  if(pwm->mFlags & PWM_FLAG_COMP) /* set Complementary channel signal*/
   {
-   status = HAL_TIMEx_PWMN_Start(pwm->mTimer, pwm->mChannel);
+   
+    status = HAL_TIMEx_PWMN_Stop(pwm->mTimer, pwm->mChannel);
+    if (HAL_TIM_PWM_ConfigChannel(pwm->mTimer, &pwm->mConfig, pwm->mChannel) != HAL_OK) 
+    { 
+        Error_Handler(); 
+    } 
+
+    status = HAL_TIMEx_PWMN_Start(pwm->mTimer, pwm->mChannel);
   }
-  else
+  else  /* set  channel signal*/
   {
+
+    status = HAL_TIM_PWM_Stop(pwm->mTimer,  pwm->mChannel);
+
+    if (HAL_TIM_PWM_ConfigChannel(pwm->mTimer, &pwm->mConfig, pwm->mChannel) != HAL_OK) 
+    { 
+        Error_Handler(); 
+    } 
+
     status = HAL_TIM_PWM_Start(pwm->mTimer, pwm->mChannel);
   }
 
