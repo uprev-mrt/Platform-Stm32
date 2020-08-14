@@ -19,8 +19,9 @@
 
 mrt_status_t flash_init(flash_chunk_t* fc, uint32_t baseAddr, uint32_t chunkSize, uint32_t pageSize )
 {
-    
+#ifdef STM32WBxx_HAL_FLASH_H
     __HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_ALL_ERRORS); //If this causes compilation errors in other projects, the symbol might be specific to WB55
+#endif
     
     fc->mBaseAddr = baseAddr;
     fc->mChunkSize = chunkSize;
