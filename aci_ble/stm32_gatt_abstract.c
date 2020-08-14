@@ -234,16 +234,22 @@ mrt_status_t MRT_GATT_UPDATE_CHAR(mrt_gatt_char_t* chr, uint8_t* data, int len)
         return status;
     }
 
-    memcpy((void*)chr->mCache.mData, data, len ); //Update Cache
-    chr->mCache.mLen = len;
-        
+    if ((len == chr->mCache.mLen) && (memcmp((void*)chr->mCache.mData, data, len) == 0))
+    {
+    	status = MRT_STATUS_OK;
+    }
+    else
+    {
+		memcpy((void*)chr->mCache.mData, data, len ); //Update Cache
+		chr->mCache.mLen = len;
 
-    status = aci_gatt_update_char_value(chr->mSvc->mHandle ,
-                             chr->mHandle,
-                              0, /* charValOffset */
-                             len, /* charValueLen */
-                             data);
-    
+
+		status = aci_gatt_update_char_value(chr->mSvc->mHandle ,
+								 chr->mHandle,
+								  0, /* charValOffset */
+								 len, /* charValueLen */
+								 data);
+    }
     return status;
 }
 
