@@ -48,8 +48,7 @@ mrt_status_t flash_read(flash_chunk_t* fc, uint32_t addr, uint8_t* data, uint32_
  * ***************************************/
 #ifdef __STM32F0xx_HAL_FLASH_H
 mrt_status_t flash_write(flash_chunk_t* fc, uint32_t addr, const uint8_t* data, uint32_t len)
-{
-     __HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_EOP | FLASH_FLAG_OPERR | FLASH_FLAG_WRPERR | FLASH_FLAG_PGAERR | FLASH_FLAG_PGSERR );
+{   
 
     uint32_t* cast = (uint32_t*)data;
     uint32_t comp;
@@ -57,10 +56,10 @@ mrt_status_t flash_write(flash_chunk_t* fc, uint32_t addr, const uint8_t* data, 
 
     HAL_FLASH_Unlock();
 
-    for(int i=0; i < len; i+=)
+    for(int i=0; i < len; i++)
     {
     	cursor = i/4;
-        flash_read(fc, addr + i, &comp, sizeof(uint464_t));
+        flash_read(fc, addr + i, &comp, sizeof(uint32_t));
 
         //Only write if it is different to save write cycles
         if(comp != cast[cursor])
