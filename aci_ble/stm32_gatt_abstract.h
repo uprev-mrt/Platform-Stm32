@@ -67,12 +67,20 @@ mrt_status_t MRT_GATT_REGISTER_PROFILE_INIT(mrt_profile_init cbInit);
 mrt_status_t MRT_GATT_REGISTER_SERVICE(mrt_gatt_svc_t* svc);
 
 /**
- * @brief update characteristic value
+ * @brief updates characteristic value if it has changed
  * @param chr ptr to characteristic
  * @param data ptr to data to update from
  * @param len size of data (in bytes)
  */
 mrt_status_t MRT_GATT_UPDATE_CHAR(mrt_gatt_char_t* chr, uint8_t* data, int len);
+
+/**
+ * @brief Forces update even if data is the same
+ * @param chr ptr to characteristic
+ * @param data ptr to data to update from
+ * @param len size of data (in bytes)
+ */
+mrt_status_t MRT_GATT_FORCE_UPDATE_CHAR(mrt_gatt_char_t* chr, uint8_t* data, int len);
 
 
 #ifdef __cplusplus

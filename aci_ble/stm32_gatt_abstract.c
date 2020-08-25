@@ -234,7 +234,7 @@ mrt_status_t MRT_GATT_UPDATE_CHAR(mrt_gatt_char_t* chr, uint8_t* data, int len)
         return status;
     }
 
-    if ((len == chr->mCache.mLen) && (memcmp((void*)chr->mCache.mData, data, len) == 0))
+    if ((len <= chr->mCache.mLen) && (memcmp((void*)chr->mCache.mData, data, len) == 0)) //(memcmp((void*)chr->mCache.mData, data, len) == 0)
     {
     	status = MRT_STATUS_OK;
     }
@@ -250,6 +250,28 @@ mrt_status_t MRT_GATT_UPDATE_CHAR(mrt_gatt_char_t* chr, uint8_t* data, int len)
 								 len, /* charValueLen */
 								 data);
     }
+    return status;
+}
+
+mrt_status_t MRT_GATT_FORCE_UPDATE_CHAR(mrt_gatt_char_t* chr, uint8_t* data, int len)
+{
+    mrt_status_t status = MRT_STATUS_ERROR;
+
+    if(!ServerInitialized) /* If server is not initialized, return error*/
+    {
+        return status;
+    }
+
+    memcpy((void*)chr->mCache.mData, data, len ); //Update Cache
+    chr->mCache.mLen = len;
+
+
+    status = aci_gatt_update_char_value(chr->mSvc->mHandle ,
+                                chr->mHandle,
+                                0, /* charValOffset */
+                                len, /* charValueLen */
+                                data);
+    
     return status;
 }
 
