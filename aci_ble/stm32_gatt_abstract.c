@@ -18,13 +18,14 @@
 /* Private Variables ---------------------------------------------------------*/
 static bool ServerInitialized = false;                                      /* flag to make sure server is initialized before updating chars*/
 mrt_profile_init f_profileInit;                                             /* function pointer to inject profile init function into framework*/
-static attrib_table_entry_t attribute_table[MRT_GATT_MAX_ATTRIBUTE_COUNT];  /* Attibute entry table*/
+static attrib_table_entry_t* attribute_table;                               /* Attibute entry table*/
+static int attribute_count;
 
 /* Functions -----------------------------------------------------------------*/
 
 static void clear_attribute_table()
 {
-    for(int i=0; i < MRT_GATT_MAX_ATTRIBUTE_COUNT; i++)
+    for(int i=0; i < attribute_count; i++)
     {
         attribute_table[i].mType = ATTR_NONE;
         attribute_table[i].mPtr = NULL;
@@ -145,6 +146,12 @@ void convert_uuid(mrt_gatt_uuid_t* src, Char_UUID_t* dst, uint8_t* st_type)
         *st_type = UUID_TYPE_128;
         memcpy((uint8_t*)dst->Char_UUID_128, (uint8_t*)src->m128Bit, 16);
     }
+}
+
+void MRT_GATT_ALLOCATE_ATTRIBUTE_TABLE(int attrCount)
+{
+    attribute_count = attrCount;
+    attribute_table = (attrib_table_entry_t*)malloc(sizeof(attrib_table_entry_t) * attrCount);
 }
 
 

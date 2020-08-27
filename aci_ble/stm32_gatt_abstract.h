@@ -46,12 +46,14 @@ typedef struct{
 /* Exported macro ------------------------------------------------------------*/
 #define MRT_GATT_DATA_ATTR __attribute__((section ("BLE_DRIVER_CONTEXT")))
 
-#ifndef MRT_GATT_MAX_ATTRIBUTE_COUNT
-#define MRT_GATT_MAX_ATTRIBUTE_COUNT 100
-#endif
-
 
 /* Exported functions ------------------------------------------------------- */
+
+/**
+ * @brief allocates attribute table 
+ * @param attrCount number of attributes
+ */
+void MRT_GATT_ALLOCATE_ATTRIBUTE_TABLE(int attrCount);
 
 /**
  * @brief registers a callback to our profile init function. This way we can inject it into their init function
