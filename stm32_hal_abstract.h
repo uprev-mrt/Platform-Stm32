@@ -26,7 +26,7 @@
 
 //Uart Abstraction
 typedef HAL_StatusTypeDef mrt_uart_status_t;
-#ifdef HAL_UART_MODULE_ENABLED
+#ifdef HAL_UART_MODULE_ENABLED //These symbols are defined by the MxCube platform when the peripheral is used
   typedef UART_HandleTypeDef* mrt_uart_handle_t;
 
   #define MRT_UART_TX(handle, data, len, timeout) HAL_UART_Transmit(handle, data, len, timeout)
