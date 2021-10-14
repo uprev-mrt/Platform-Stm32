@@ -43,7 +43,14 @@ typedef HAL_StatusTypeDef mrt_uart_status_t;
 #endif
 
 
-//GPIO Abstraction
+/* GPIO Abstraction
+ *
+ * STM32 gpio functions use a port and pin number
+ * SO MrT uses a custom struct to encapsulate this and a macro for easier use 
+ * 
+ * If a pin is labeled in STM32Cube as 'BUTTON_01', the macro MRT_GPIO(BUTTON_01) will expand to (mrt_gpio_t){BUTTON_01_GPIO_Port, BUTTON_01_Pin }
+ * 
+ */
 typedef struct{
   GPIO_TypeDef* port;
   uint16_t pin;
