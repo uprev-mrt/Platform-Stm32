@@ -22,7 +22,7 @@ int mrt_stm32_uart_read(UART_HandleTypeDef* handle, uint8_t* data, int len, int 
   /* attempt a uart read, if read times out, check how many bytes were received */
   status = HAL_UART_Receive(handle, data, len, timeout);
 
-  if(HAL_UART_Receive(handle, data, len, timeout) == HAL_TIMEOUT  )
+  if(status == HAL_TIMEOUT)
   {
       len -= handle->RxXferCount; /* when the read is started, RxXferCount gets set to len, and decrements for each byte received*/
   }
