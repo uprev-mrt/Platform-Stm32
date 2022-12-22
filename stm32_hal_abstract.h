@@ -112,7 +112,7 @@ typedef HAL_StatusTypeDef mrt_spi_status_t;
   typedef SPI_HandleTypeDef* mrt_spi_handle_t;
   #define MRT_SPI_TRANSFER(handle ,tx, rx ,len, timeout) HAL_SPI_TransmitReceive(handle, tx, rx, len, timeout)
   #define MRT_SPI_TRANSMIT(handle, tx, len, timeout) HAL_SPI_Transmit(handle, tx, len, timeout)
-  #define MRT_SPI_RECIEVE(handle, tx, len, timeout) HAL_SPI_Transmit(handle, tx, len, timeout)
+  #define MRT_SPI_RECIEVE(handle, rx, len, timeout) HAL_SPI_Receive(handle, rx, len, timeout)
 #else
   typedef uint32_t* mrt_spi_handle_t;
   #define MRT_SPI_TRANSFER(handle ,tx, rx ,len, timeout) 0
